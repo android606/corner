@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:alpha=".5"
+    android:foregroundGravity="center_horizontal"
+    android:gravity="fill"
+    android:textAlignment="center"
+    android:theme="@android:style/Theme.Dialog"
+    tools:context=".SettingsActivity" >
+-->
+		<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/tablelayout1"
+		        android:alpha=".5"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="20dp"
+		    android:contentDescription="Saved Kids"
+		    android:padding="0dp"
+		    android:scrollbarStyle="insideOverlay"
+		    android:scrollbars="vertical"
+		    android:stretchColumns="0"
+		    android:theme="@android:style/Theme.Dialog"
+		    android:visibility="visible" >
+
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="center_horizontal|top">
+
+			<TextView
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginBottom="1dp"
+			    android:layout_marginLeft="1dp"
+			    android:layout_marginRight="1dp"
+			    android:layout_marginTop="1dp"
+			    android:layout_span="3"
+			    android:layout_weight="0"
+			    android:background="#8899cc"
+			    android:gravity="center"
+			    android:text="Saved Kids"
+			    android:textColor="@color/black_overlay"
+			    android:textSize="24sp"
+			    android:textStyle="bold"
+			    android:typeface="serif" />
+
+		</TableRow>
+
+		<TableRow android:id="@+id/tableRow1" android:layout_width="0dp"
+			android:layout_height="wrap_content" android:layout_gravity="center_horizontal|top"
+			android:weightSum="100">
+
+			<TextView
+			    android:layout_width="200dp"
+			    android:layout_height="match_parent"
+			    android:layout_marginBottom="1dp"
+			    android:layout_marginRight="1dp"
+			    android:layout_span="1"
+			    android:layout_weight="0"
+			    android:background="#6699cc"
+			    android:gravity="bottom|left"
+			    android:paddingLeft="5dp"
+			    android:paddingRight="5dp"
+			    android:text="Name"
+			    android:textColor="@color/black_overlay"
+			    android:textSize="12sp"
+			    android:textStyle="bold"
+			    android:typeface="serif" />
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="match_parent"
+			    android:layout_marginBottom="1dp"
+			    android:layout_marginRight="1dp"
+			    android:layout_weight="1"
+			    android:background="#6699cc"
+			    android:gravity="center|bottom"
+			    android:paddingLeft="5dp"
+			    android:paddingRight="5dp"
+			    android:text="Min"
+			    android:textColor="@color/black_overlay"
+			    android:textSize="12sp"
+			    android:textStyle="bold"
+			    android:typeface="serif" />
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="match_parent"
+			    android:layout_marginBottom="1dp"
+			    android:layout_marginRight="1dp"
+			    android:layout_span="1"
+			    android:layout_weight="1"
+			    android:background="#6699cc"
+			    android:gravity="center|bottom"
+			    android:paddingLeft="5dp"
+			    android:paddingRight="5dp"
+			    android:paddingTop="3dp"
+			    android:text="Del"
+			    android:textColor="@color/black_overlay"
+			    android:textSize="12sp"
+			    android:textStyle="bold"
+			    android:typeface="serif" />
+
+		</TableRow>
+
+
+	</TableLayout>
+
+<!-- 
+</RelativeLayout>
+-->
