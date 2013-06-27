@@ -23,17 +23,17 @@ import com.diabolicalschema.corner.Config;
 
 public class MainActivity extends Activity {
 	@SuppressLint("SimpleDateFormat")
-	// fields for everyone
+	// Fields for everyone
 	public static final String EXTRA_MESSAGE = "com.diabolicalschema.corner.MESSAGE";
 	public static final String ACTIVITY_NAME = "MainActivity()";
 	public int currentlayout;
-	// fields for MainView
+	// Fields for MainView
 	private CDownTimerWithPause timer;
 	private TextView tbTimeRemaining;
 	private Spinner spSelectKid;
 	private DateFormat formatterTimer = new SimpleDateFormat("mm:ss");
 	private long countdownTime = 0;
-	// fields for SettingsView
+	// Fields for SettingsView
 	private TableLayout tableLayout1;
 	private LayoutInflater inflater;
 	
