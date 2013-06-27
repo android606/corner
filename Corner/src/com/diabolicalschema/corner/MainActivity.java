@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 	protected void onPause (){
     	Log.d(ACTIVITY_NAME, "onPause()");
     	super.onPause();
-		Config.save(this);
+		Config.save();
 	}
 
 	//
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 	protected void onResume(){
     	Log.d(ACTIVITY_NAME, "onResume()");
     	super.onResume();
-		Config.load(this);
+		Config.load();
         //populateKidSelectorSpinner();		
     	ShowMainView();
 	}
@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
 	public void addTestData(View view)
 	{
 		Config.addTestData();
-		Config.saveKids(this);
+		Config.save();
 	}
 	
     /**
@@ -142,7 +142,7 @@ public class MainActivity extends Activity {
 	public void clearTestData(View view)
 	{
 		Config.clearAllKids();
-		Config.saveKids(this);
+		Config.save();
 	}
 
 	/**

@@ -138,7 +138,7 @@ public class KidsListArrayAdapter extends ArrayAdapter<Kid> {
 				// so I'm not going to bother confirming the deletion.
 				// Delete the kid from the config
 				Config.delKid(kidIDNumber);
-				Config.save(context);
+				Config.save();
 
 				// Tell everyone that the data changed, so they will refresh/redraw as needed.
 				notifyDataSetChanged();

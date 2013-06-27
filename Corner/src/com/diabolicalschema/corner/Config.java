@@ -18,6 +18,7 @@ import android.util.Log;
  * contains the specifications for all of the saved kids
  */
 public class Config {
+	private static Context context;
 	private static final String CLASS_NAME = "Config()";
 	private static List<Kid> _kids = new ArrayList<Kid>();
 	private static SharedPreferences prefs;
@@ -32,6 +33,7 @@ public class Config {
 	private static final Config _theInstance = new Config();
 	private Config()
 	{
+		context = ContextProvider.getContext();
 		try {}
 		catch (Exception e) {}
 	}
@@ -84,11 +86,11 @@ public class Config {
 	///
 	/// save()
 	/// Saves kids and settings to persistent storage
-	public static void save(Context context){
+	public static void save(){
 	    Log.d(CLASS_NAME, "save()");
 		// Then, save all of the general config options
 		// Get the handle on our SharedPreferences
-		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
 		// Clear the SharedPreferences and then save each preference
 		SharedPreferences.Editor spedit = prefs.edit();
@@ -97,7 +99,7 @@ public class Config {
 		spedit.commit();
 
 		// Save all of the kids in the config
-		saveKids(context);
+		saveKids();
 		
 	}
 	
@@ -105,12 +107,12 @@ public class Config {
 	///
 	/// saveKids()
 	/// saves the kids to persistent storage
-	public static void saveKids(Context context){
+	private static void saveKids(){
 	    Log.d(CLASS_NAME, "saveKids()");
 		String settingKey;
 		
 		// Get the handle on our SharedPreferences
-		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
 		// Save each of the kids
 		SharedPreferences.Editor spedit = prefs.edit();
@@ -134,16 +136,17 @@ public class Config {
 	///
 	/// load ()
 	/// Loads kids and settings from persistent storage
-	public static void load(Context context){
+	public static void load(){
 	    Log.i(CLASS_NAME, "load()");
 		// Get the handle on our SharedPreferences
-		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
-		// Get nextID from storage
+		// Load general settings
+		// nextID is the ID we're going to assign next time we create a Kid
 		nextID = prefs.getInt("nextID", 0);
 		
 		// load all the kids from the config
-		loadKids(context);
+		loadKids();
 	}
 		
 	///
@@ -153,7 +156,7 @@ public class Config {
 	/// Careful, don't mix up ID and Offset in here.  Each kid has a unique ID, but that's not used to
 	/// store and retrieve them from storage.  They're stored by
 	/// offset in the SharedPreferences, and that's how they're reconstructed.
-	public static void loadKids(Context context){
+	private static void loadKids(){
 	    Log.i(CLASS_NAME, "loadKids()");
 		String pattern = ".{8}\\((\\d+)\\)(.*)";
 		Pattern p = Pattern.compile(pattern);
@@ -164,7 +167,7 @@ public class Config {
 		_kids.clear();
 		
 		// Get the handle on our SharedPreferences
-		prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		Map<String, ?> prefsMap = prefs.getAll();
 		
