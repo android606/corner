@@ -307,6 +307,7 @@ public class MainActivity extends Activity {
 	 */
 	/** addDebugWidgets()
 	 * Adds buttons 'n stuff to the View for to help debugging.
+	 * It makes a layout, puts buttons in it, then adds the layout to the main view
 	 * Just keeping this in one place so it's easy to turn on and off
 	 */
 	public void addDebugWidgets()
@@ -364,8 +365,7 @@ public class MainActivity extends Activity {
 		
 		
 		// Finally, add the layout full of buttons to the main layout
-		layout.addView(layoutDebug);
-		
+		layout.addView(layoutDebug);	
 	}
 
 }
