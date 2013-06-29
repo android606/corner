@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutMainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -38,21 +39,5 @@
 
         <requestFocus />
     </TextView>
-
-    <Button
-        android:id="@+id/btnAddTestData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.00"
-        android:onClick="addTestData"
-        android:text="Add Test Data" />
-
-    <Button
-        android:id="@+id/btnClearConfig"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.00"
-        android:onClick="clearTestData"
-        android:text="Clear Config" />
 
 </LinearLayout>

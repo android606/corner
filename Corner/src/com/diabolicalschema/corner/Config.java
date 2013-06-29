@@ -64,14 +64,7 @@ public class Config {
 		_kids.clear();
 		
 	}
-	// This just adds some fake data to the conrfiguration so that we have somehting to test and debug with
-	public static void addTestData(){
-		// Test data
-      addKid("Nora", 7); // 7 minutes
-      addKid("Emma", 5); // 5 minutes
-      addKid("Zoe", 10); // 10 minutes        
-		
-	}
+
 	//
 	// printKidsToLog()
 	// prints out a list of the kids in the current config to the log

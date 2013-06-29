@@ -10,12 +10,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout.LayoutParams;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -98,8 +104,8 @@ public class MainActivity extends Activity {
     	Log.d(ACTIVITY_NAME, "onResume()");
     	super.onResume();
 		Config.load();
-
     	ShowMainView();
+
 	}
 
 	/** onBackPressed()
@@ -125,7 +131,7 @@ public class MainActivity extends Activity {
 //	   // If they *aren't* looking at the settings activity, go ahead and do the system default action
 //	   else {
 //		   
-//		   super.onBackPressed();
+		   super.onBackPressed();
 //	   }
 
 	}
@@ -139,10 +145,11 @@ public class MainActivity extends Activity {
 	 * Used during onResume()
 	 */
 	public void ShowMainView(){
-		currentlayout = R.layout.activity_main;
-		this.setContentView(currentlayout);
+		this.setContentView(R.layout.activity_main);
+		// Add any buttons and crap I might have for debugging
+        addDebugWidgets();
 		
-        // Add the kids to the spinner
+		// Add the kids to the spinner
         populateKidSelectorSpinner();
 		
         //Set up the time remaining display TextView 
@@ -216,22 +223,6 @@ public class MainActivity extends Activity {
         
 	}
 
-	/*
-	 * GUI ELEMENT - Timer Controls
-	 */
-	/**
-     * startStopTimer()
-     * Called when the user presses the Start/Stop button
-     * @param view
-     */ 
-	public void startStopTimer(View view)
-	{
-		timer.togglePause();
-	}
-	
-	/*
-	 * GUI ELEMENT - Spinner
-	 */
 	/** showConfigActivity()
 	 * Shows the Configuration activity so you can change config options, including the list of kids.
 	 * @see com.diabolicalschema.corner.EditConfigActivity 
@@ -246,34 +237,7 @@ public class MainActivity extends Activity {
 		
 	}
 
-	/*
-	 * DEBUG GUI ELEMENTS
-	 */
-    /**
-     * addTestData()
-     * Called when the user presses the "Add Test Data" button
-     * @param view
-     */ 
-	public void addTestData(View view)
-	{
-		Config.addTestData();
-		Config.save();
-	}
-	
-    /**
-     * clearConfig()
-     * Called when the user presses the "Clear Config" button
-     * @param view
-     */ 
-	public void clearTestData(View view)
-	{
-		Config.clearAllKids();
-		Config.save();
-	}
-
-
-	/*
-	 * SpinnerEventHandler()
+	/** SpinnerEventHandler()
 	 * Triggered when an item is selected in the "child selector" Spinner
 	 */
 	public class SpinnerEventHandler extends Activity 
@@ -325,4 +289,83 @@ public class MainActivity extends Activity {
 		}
 	
 	}
+
+	/*
+	 * GUI ELEMENT - Timer Controls
+	 */
+	/** startStopTimer()
+     * Called when the user presses the Start/Stop button
+     * @param view
+     */ 
+	public void startStopTimer(View view)
+	{
+		timer.togglePause();
+	}	
+
+	/*
+	 * DEBUG WIDGETS
+	 */
+	/** addDebugWidgets()
+	 * Adds buttons 'n stuff to the View for to help debugging.
+	 * Just keeping this in one place so it's easy to turn on and off
+	 */
+	public void addDebugWidgets()
+	{
+		// Get main layout
+		LinearLayout layout = (LinearLayout) findViewById(R.id.layoutMainActivity);
+		
+		// Set up container for debug controls
+		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+		layoutParams.weight = 1.0f;
+		layoutParams.gravity = (Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+
+		LinearLayout layoutDebug = new LinearLayout(this);		
+		layoutDebug.setOrientation(LinearLayout.HORIZONTAL);
+		layoutDebug.setLayoutParams(layoutParams);
+
+		// "Add Test Data" button
+		Button buttonATD = new Button(this);
+		buttonATD.setText("Add Test Data");
+		buttonATD.setEnabled(true);
+		buttonATD.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Add test data to the config
+				// This just adds some fake data to the conrfiguration so that we have somehting to test and debug with
+
+				Config.addKid("Nora", 7); // 7 minutes
+			    Config.addKid("Emma", 5); // 5 minutes
+			    Config.addKid("Zoe", 10); // 10 minutes        			
+				Config.save();
+				
+			}
+		});
+		buttonATD.setLayoutParams(layoutParams);
+		layoutDebug.addView(buttonATD);
+
+		
+		// "Clear Kids" button
+		Button buttonCK = new Button(this);
+		buttonCK.setText("Clear Kids");
+		buttonCK.setEnabled(true);
+		buttonCK.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Clear all of the kids from the config
+				Config.clearAllKids();
+				Config.save();
+			}
+		});
+		buttonCK.setLayoutParams(layoutParams);
+		
+		layoutDebug.addView(buttonCK);
+		
+		
+		// Finally, add the layout full of buttons to the main layout
+		layout.addView(layoutDebug);
+		
+	}
+
 }
