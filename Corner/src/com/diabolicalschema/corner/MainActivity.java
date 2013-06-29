@@ -21,6 +21,25 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import com.diabolicalschema.corner.Config;
 
+/** class MainActivity
+ * Okay, I know, that class name sucks.
+ * 
+ * Corner is an Android app intended to be a custom timer to help you put your kids in time out.
+ * 
+ * For now, it displays a countdown timer on the screen with start/stop and reset buttons.  The timer is preset to the 
+ * time associated with the currently selected child.
+ * 
+ * When they select one of the children, the timer is reset to the number of minutes associated with that child.
+ * 
+ * The list of childrens' names, times, and other information is retrieved from the Config class.
+ * 
+ * The user accesses the configuration (to select, modify, add and remove children) using the view provided by the 
+ * EditConfigActivity class.
+ * 
+ * @see com.diabolicalschema.corner.EditConfigActivity 
+ * @author android606
+ */
+@SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
 	@SuppressLint("SimpleDateFormat")
 	// Fields for everyone
@@ -33,45 +52,121 @@ public class MainActivity extends Activity {
 	private Spinner spSelectKid;
 	private DateFormat formatterTimer = new SimpleDateFormat("mm:ss");
 	private long countdownTime = 0;
-	// Fields for SettingsView
-	private TableLayout tableLayout1;
-	private LayoutInflater inflater;
-	
-	//
-	// onCreate()
+
+	/*
+	 * ACTIVITY EVENT HANDLERS
+	 */
+	/** onCreate()
+	 * Called when the activity is created
+	 * 
+	 * Don't need to do anything here, because we do it all in onResume, which is always called after onCreate().
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    	Log.d(ACTIVITY_NAME, "onCreate()");
-    	
-    	ShowMainView();
+//    	Log.d(ACTIVITY_NAME, "onCreate()");
 
     }
 	
-	//
-	// onPause()
-	// Called when the system pauses the activity
-	// Save state
+	/** onPause()
+	 * Called when the system pauses the activity.
+	 * This is supposed to happen any time this activity is completely obscured onscreen by another one.
+	 *
+	 * There's also a good chance that the system will stop this activity after onPause(), so it's a good
+	 * idea to store our state and save it for later.
+	 * 
+	 * Saves state
+	 * @see android.app.Activity#onPause()
+	 */
 	@Override
 	protected void onPause (){
-    	Log.d(ACTIVITY_NAME, "onPause()");
+//    	Log.d(ACTIVITY_NAME, "onPause()");
     	super.onPause();
 		Config.save();
 	}
 
-	//
-	// onResume()
-	// Called when the Activity resumes from pause.
-	// Also called when the Activity is created, after onCreate()
+	/** onResume()
+	 * Called when the Activity resumes from pause.
+	 *
+	 * Also called when the Activity is created, after onCreate()
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume(){
     	Log.d(ACTIVITY_NAME, "onResume()");
     	super.onResume();
 		Config.load();
-        //populateKidSelectorSpinner();		
+
     	ShowMainView();
 	}
 
+	/** onBackPressed()
+	 * Called when the user presses the "back" button
+	 * 
+	 * Sometimes we want to capture this to prevent them from exiting the app
+	 */
+	@Override
+	public void onBackPressed() {
+	   Log.d(ACTIVITY_NAME, "onBackPressed() Called.  View ID:" + String.valueOf(currentlayout));
+
+// Commented this out because I'm not using the activity_settings layout anymore.
+// But I still want to keep an example of how to block the 'back' button conditionally...
+//
+//	   // If the user is currently looking at the settings activity and they press "back"
+//	   // bring them back to the main activity, rather than doing the system default of just exiting.
+//	   if(currentlayout == R.layout.activity_settings){
+//
+//		   // Return to the main view
+//		   ShowMainView();
+//		   
+//	   } 
+//	   // If they *aren't* looking at the settings activity, go ahead and do the system default action
+//	   else {
+//		   
+//		   super.onBackPressed();
+//	   }
+
+	}
+	
+	/*
+	 * GUI ELEMENTS
+	 */
+	/**
+	 * ShowMainView()
+	 * changes the view to the "main" layout
+	 * Used during onResume()
+	 */
+	public void ShowMainView(){
+		currentlayout = R.layout.activity_main;
+		this.setContentView(currentlayout);
+		
+        // Add the kids to the spinner
+        populateKidSelectorSpinner();
+		
+        //Set up the time remaining display TextView 
+		tbTimeRemaining = (TextView) findViewById(R.id.tbTimeRemaining);
+		String dateFormatted = formatterTimer.format(new Date(countdownTime));
+		tbTimeRemaining.setText(dateFormatted);
+		
+        // Set up the timer (1000 = 1 second)
+    	timer = new CDownTimerWithPause(countdownTime, 1000){
+    		@Override
+			public void _onFinish(){
+				tbTimeRemaining.setText(R.string.timer_finished_value);
+			}
+			@Override
+			public void _onTick(long millisUntilFinished){
+				
+				String timeFormatted = formatterTimer.format(new Date(millisUntilFinished));
+				tbTimeRemaining.setText(timeFormatted);
+			}
+    	};
+	}
+	/*
+	 * GUI ELEMENT - Kid Selector
+	 */
 	/** listOfKidsForSpinner()
 	 *  All this does is tack "Add/Edit Children..." to the end of the list, so it shows up in the kid selector
 	 */
@@ -84,9 +179,8 @@ public class MainActivity extends Activity {
 		 return ListToReturn;
 	}
 
-    /**
-	 * populateKidSelectorSpinner()
-     * Set up the kid selector spinner
+    /** populateKidSelectorSpinner()
+     * Attaches an adapter to the kid selector spinner
      */
 	private void populateKidSelectorSpinner(){
 		// Get the handle to the spinner
@@ -121,8 +215,40 @@ public class MainActivity extends Activity {
         
         
 	}
+
+	/*
+	 * GUI ELEMENT - Timer Controls
+	 */
+	/**
+     * startStopTimer()
+     * Called when the user presses the Start/Stop button
+     * @param view
+     */ 
+	public void startStopTimer(View view)
+	{
+		timer.togglePause();
+	}
 	
-	
+	/*
+	 * GUI ELEMENT - Spinner
+	 */
+	/** showConfigActivity()
+	 * Shows the Configuration activity so you can change config options, including the list of kids.
+	 * @see com.diabolicalschema.corner.EditConfigActivity 
+	 */
+	public void showConfigActivity(){
+
+		 Intent intent = new Intent(this, EditConfigActivity.class);
+		    //EditText editText = (EditText) findViewById(R.id.edit_message);
+		    //String message = editText.getText().toString();
+		    //intent.putExtra(EXTRA_MESSAGE, message);
+		    startActivity(intent);
+		
+	}
+
+	/*
+	 * DEBUG GUI ELEMENTS
+	 */
     /**
      * addTestData()
      * Called when the user presses the "Add Test Data" button
@@ -145,103 +271,7 @@ public class MainActivity extends Activity {
 		Config.save();
 	}
 
-	/**
-     * startStopTimer()
-     * Called when the user presses the Start/Stop button
-     * @param view
-     */ 
-	public void startStopTimer(View view)
-	{
-		timer.togglePause();
-	}
-	
-	/**
-	 * ShowMainView()
-	 * changes the view to the "main" layout
-	 * Used during onCreate or when someone returns from the Settings menu.
-	 */
-	public void ShowMainView(){
-		currentlayout = R.layout.activity_main;
-		this.setContentView(currentlayout);
-		
-        // Add the kids to the spinner
-        populateKidSelectorSpinner();
-		
-        //Set up the time remaining display TextView 
-		tbTimeRemaining = (TextView) findViewById(R.id.tbTimeRemaining);
-		String dateFormatted = formatterTimer.format(new Date(countdownTime));
-		tbTimeRemaining.setText(dateFormatted);
-		
-        // Set up the timer (1000 = 1 second)
-    	timer = new CDownTimerWithPause(countdownTime, 1000){
-    		@Override
-			public void _onFinish(){
-				tbTimeRemaining.setText(R.string.timer_finished_value);
-			}
-			@Override
-			public void _onTick(long millisUntilFinished){
-				
-				String timeFormatted = formatterTimer.format(new Date(millisUntilFinished));
-				tbTimeRemaining.setText(timeFormatted);
-			}
-    	};
-	}
 
-
-	/**
-	 * ShowKidsListView()
-	 * Shows the list of kids so you can edit them 
-	 */
-	public void ShowKidsListView(){
-
-		 Intent intent = new Intent(this, EditKidsActivity.class);
-		    //EditText editText = (EditText) findViewById(R.id.edit_message);
-		    //String message = editText.getText().toString();
-		    //intent.putExtra(EXTRA_MESSAGE, message);
-		    startActivity(intent);
-		
-	}
-
-
-	
-	/**
-	 * 
-	 * KidAction
-	 * Holds the id of the Kid that we want to take an action on, and holds the action we want to take
-	 * So's we can bundle them up together and make it neat and tidy to save them for later.
-	 * 
-	 */
-	public enum kid_action {NO_CHANGE, CHANGE_NAME, CHANGE_TIMEOUT, DELETE_KID};
-	public class KidAction 
-	{
-		public int id;
-		public kid_action action;
-		public KidAction(int kid_id, kid_action action){
-			this.id = kid_id;
-			this.action = action;
-		};
-		
-	}
-	
-	
-	// Override the "Back" button when a dialog is open and use it to close the dialog
-	// Otherwise, let the "Back" button do whatever the system wants it to do
-	@Override
-	public void onBackPressed() {
-	   Log.d(ACTIVITY_NAME, "onBackPressed() Called.  View ID:" + String.valueOf(currentlayout));
-
-	   if(currentlayout == R.layout.activity_settings){
-
-		   // Return to the main view
-		   ShowMainView();
-		   
-	   } else {
-		   
-		   super.onBackPressed();
-	   }
-
-	}
-	
 	/*
 	 * SpinnerEventHandler()
 	 * Triggered when an item is selected in the "child selector" Spinner
@@ -264,7 +294,7 @@ public class MainActivity extends Activity {
 			if(pos == Config.getAddNewKidIndex()){
 				view.getTag();
 
-				ShowKidsListView();
+				showConfigActivity();
 				//ShowSettingsView();
 
 			} 

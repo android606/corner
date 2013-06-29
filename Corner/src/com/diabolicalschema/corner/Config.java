@@ -12,10 +12,16 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 
-/* Config()
- * Using singleton pattern
- * contains all of the settings for the program, and more importantly,
- * contains the specifications for all of the saved kids
+/** Config
+ * Static class that holds all of the settings for the program and deals with keeping them in 
+ * persistent storage.
+ * 
+ * Holds individual settings, as well as the list of Kid objects that the program uses to store kid-specific settings.
+ * 
+ * For now, it stores everything using Android's SharedPreferences.
+ * 
+ * @author android606
+ * 
  */
 public class Config {
 	private static Context context;

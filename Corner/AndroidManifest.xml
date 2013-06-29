@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.diabolicalschema.corner.EditKidsActivity"
+            android:name="com.diabolicalschema.corner.EditConfigActivity"
             android:label="@string/title_activity_edit_kids"
             android:parentActivityName="android.app.ListActivity" >
             <meta-data

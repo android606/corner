@@ -1,22 +1,29 @@
 package com.diabolicalschema.corner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-public class EditKidsActivity extends ListActivity {
+/** EditConfigActivity
+ * 
+ * This provides the user's primary interface to modify the configuration stored in the Config class.
+ * 
+ * At this time, that includes selecting, modifying, adding, and removing children.
+ * 
+ * @author android606
+ * @see com.diabolicalschema.corner.Config
+ * 
+ */
+
+
+public class EditConfigActivity extends ListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
