@@ -11,19 +11,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import com.diabolicalschema.corner.Config;
 
@@ -340,6 +337,8 @@ public class MainActivity extends Activity {
 			    Config.addKid("Zoe", 10); // 10 minutes        			
 				Config.save();
 				
+				// Refresh the spinner
+				populateKidSelectorSpinner();
 			}
 		});
 		buttonATD.setLayoutParams(layoutParams);
@@ -357,6 +356,9 @@ public class MainActivity extends Activity {
 				// Clear all of the kids from the config
 				Config.clearAllKids();
 				Config.save();
+				
+				// Refresh the spinner
+				populateKidSelectorSpinner();
 			}
 		});
 		buttonCK.setLayoutParams(layoutParams);

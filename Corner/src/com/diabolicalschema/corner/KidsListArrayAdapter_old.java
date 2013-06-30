@@ -8,10 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -24,13 +22,13 @@ import android.widget.TextView;
  * Used by EditKidsActivity()
  * 
  */
-public class KidsListArrayAdapter extends ArrayAdapter<Kid> {
+public class KidsListArrayAdapter_old extends ArrayAdapter<Kid> {
 	private final Context context;
 	private final List<String> kidsIDs;
 	private final List<Kid> kidsList;
 
-	public KidsListArrayAdapter(Context context, List<Kid> kidsList) {
-		super(context, R.layout.kids_list_item, kidsList);
+	public KidsListArrayAdapter_old(Context context, List<Kid> kidsList) {
+		super(context, R.layout.list_item_edit_kids, kidsList);
 		Log.d("KidsListArrayAdapter()", "");
 		this.context = context;
 		this.kidsIDs = kids2IDsList(kidsList);
@@ -81,7 +79,7 @@ public class KidsListArrayAdapter extends ArrayAdapter<Kid> {
 		
 		// Create a LayoutInflater, use it to make a View from the layout XML
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.kids_list_item, parent, false);
+		View rowView = inflater.inflate(R.layout.list_item_edit_kids, parent, false);
 		rowView.setTag(position);
 		
 		// Use the IDs of the Views within the layout to get handles on them so we can manipulate them
