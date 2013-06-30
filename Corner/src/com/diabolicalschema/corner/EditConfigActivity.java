@@ -97,36 +97,55 @@ public class EditConfigActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/** ConfigListItem
+	 * Represents the data needed to draw a single list item
+	 * @author android
+	 */
+	static class ConfigListItem {
+		public Kid kid;
+		public boolean isKid = true;
+		public boolean rendered = false;
+		public int layout;
+		public TextView tvTitle;
+		public TextView tvDescription;
+		public ImageView ivEditIcon;
+		public ImageView ivDeleteIcon;
+		public String sTitle;
+		public String sDescription;
+		public int iIcon1;
+		public int iIcon2;
+		public int kid_id;	
+	}
+
 	/** getConfigList() 
 	 * This generates the list of the items for the ListView 
 	 * 
 	 */
 	public List<ConfigListItem> getConfigList() {
 		List<ConfigListItem> listItems = new ArrayList<ConfigListItem>();
-		List<Kid> listKids = Config.listKids();
-		
-		for(Kid x: listKids){
+
+		// Add all of the kids to the list
+		for(Kid x: Config.listKids()){
 			ConfigListItem tempItem = new ConfigListItem();
 			tempItem.kid = x;
+			tempItem.kid_id = x.id;
+			tempItem.sTitle = x.name;
+			tempItem.sDescription = String.valueOf(x.timeout)  + " minutes";
+			tempItem.iIcon1 = R.drawable.edit_icon;
+			tempItem.iIcon2 = R.drawable.delete_icon;
+			tempItem.layout = R.layout.list_item_edit_kids;
 			listItems.add(tempItem);
 		}
+		
+		// The "Add Kid" button
+		ConfigListItem tempItem = new ConfigListItem();
+		tempItem.layout = R.layout.list_item_add_kid;
+		tempItem.isKid = false;
+		listItems.add(tempItem);
 		
 		return listItems;		
 	}
 	
-	static class ConfigListItem {
-		public Kid kid;
-		public boolean isKid() {
-			if(kid == null){
-				return false;
-			}
-			return true;
-		}
-		public TextView tvTitle;
-		public TextView tvDescription;
-		public ImageView ivEditIcon;
-		public ImageView ivDeleteIcon;
-	}
 
 	/** KidsListArrayAdapter(Context, String[])
 	 * @author android606
@@ -138,108 +157,62 @@ public class EditConfigActivity extends ListActivity {
 	 */
 	public class ConfigListArrayAdapter extends ArrayAdapter<ConfigListItem> {
 		private final Context context;
-		//private final List<String> kidsIDs;
-		private final List<ConfigListItem> configList;
+		private final List<ConfigListItem> listItems;
 
 		public ConfigListArrayAdapter(Context context, List<ConfigListItem> configList) {
 			super(context, R.layout.list_item_edit_kids, configList);
 			Log.d("ConfigListArrayAdapter()", "");
 			this.context = context;
-			this.configList = configList;	
+			this.listItems = configList;	
 		}
 
-		/** getView(int, View, ViewGroup)
+		/** getView(int position, View convertView, ViewGroup parent)
 		 * 
-		 * Pass it an index (position), it returns the View that's supposed to be at that place in the list.
-		 * Generates/returns a single row for a ListView
+		 * Pass it an index (position), it returns the View that's supposed to be at that position in the list.
 		 * 
-		 * The first part of the list is a list of kids.  Following that is an "Add" button, and then other preferences.
+		 * For example: System is trying to draw a ListView, it needs to know what the third item in the list looks 
+		 * like.  It calls getView(3, null, parent).  getView then returns the ListItem that belongs in position 
+		 * 3 in the list.  System inserts that into the list, draws it, and everything is happy.
+		 *  
+		 * @return ListItem a single row for a ListView
 		 * 
-		 * Seems like serious overkill for what I'm doing, but okay.
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-
-			// The RowView we're going to return, once we're done filling it out.
-			View rowView = new View(parent.getContext());
-							
-			if(configList.get(position).isKid()){
-				// This is a kid, so we need to ask getViewFromKid to make a ListItem for us.
-				rowView = getViewFromKid(position, convertView, parent, configList);
-			}
-			else {
-				// TODO logic to draw other types of list items
 			
+
+			// Draw Kid list items
+			if(listItems.get(position).isKid){
+//				Log.d("ConfigListArrayAdapter()","getView() position:" + position + " is a kid config list item." );
+
+				// This is a kid, so we need to ask getViewFromKid to make a ListItem for us.
+				convertView = getViewFromKid(position, convertView, parent);
+			}
+			// Draw static list items
+			else 
+			{
 				Log.d("ConfigListArrayAdapter()","getView() position:" + position + " is a regular config list item." );
-//
-//				// Create a LayoutInflater, use it to make a View from the layout XML
-//				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//				rowView = inflater.inflate(R.layout.list_item_add_kid, parent, false);
-//				rowView.setTag(position);
-//
-//				// Use the IDs of the Views within the layout to get handles on them so we can manipulate them
-//				TextView textView_name = (TextView) rowView.findViewById(R.id.kid_name);
-//				TextView textView_minutes = (TextView) rowView.findViewById(R.id.kid_minutes);
-//				ImageView imageView_delete = (ImageView) rowView.findViewById(R.id.kid_delete);
-//
-//
-//				// ***** Set up all of the various Views in each row of the list *****
-//				// Set the TextView textView_name to the Kid's name,
-//				// Set a tag so we can differentiate this TextView when someone clicks it
-//				// and set up the onClick event handler so we can do stuff when the name is clicked.
-//				textView_name.setText(kid.name);
-//				textView_name.setTag(kid);
-//				textView_name.setOnClickListener(new View.OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						// TODO Something when the kid's name is clicked
-//						Log.d("KidsListArrayAdapter()","name.onClick():" + ((Kid)v.getTag()).name);
-//
-//					}
-//				});
-//
-//				// Do the same setup for textView_minutes
-//				textView_minutes.setText(String.valueOf(kid.timeout) + " minutes");
-//				textView_minutes.setTag(kid);
-//				textView_minutes.setOnClickListener(new View.OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						// TODO Something when the kid's minutes is clicked
-//						Log.d("KidsListArrayAdapter()","minutes.onClick():" + ((Kid)v.getTag()).name);
-//
-//					}
-//				});
-//				// And also for imageView_delete
-//				imageView_delete.setImageResource(R.drawable.delete_icon);
-//				imageView_delete.setTag(position);
-//				imageView_delete.setOnClickListener(new View.OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						// Get the item number in the list
-//						int listItemNumber = Integer.parseInt(v.getTag().toString());
-//						// Use the item number to find the Kid ID
-//						int kidIDNumber = (kidsList.get(listItemNumber).id);
-//						Log.d("KidsListArrayAdapter()","delete.onClick() position:" + listItemNumber + " id:" + kidIDNumber);
-//
-//
-//						// The user clicked the "Delete" icon, so let's delete the kid.
-//						// The penalty for accidentally deleting is really not very high,
-//						// so I'm not going to bother confirming the deletion.
-//						// Delete the kid from the config
-//						Config.delKid(kidIDNumber);
-//						Config.save();
-//
-//						// Tell everyone that the data changed, so they will refresh/redraw as needed.
-//						notifyDataSetChanged();
-//
-//					}
-//				});
+				
+				ConfigListItem listItem = listItems.get(position);
+
+				// Create a LayoutInflater, use it to inflate a View from the layout resource we stored earlier in listItem.layout
+				// See getConfigList() about that
+				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(listItem.layout, parent, false);
+				
+				// Use the IDs of the Views within the layout to get handles on them so we can manipulate them
+//				listItem.tvTitle = (TextView) convertView.findViewById(R.id.kid_name);
+//				listItem.tvDescription = (TextView) convertView.findViewById(R.id.kid_minutes);
+//				listItem.ivDeleteIcon = (ImageView) convertView.findViewById(R.id.kid_delete);
+//				listItem.ivEditIcon = (ImageView) convertView.findViewById(R.id.kid_edit);
+				convertView.setTag(listItem);
+				
+				// Store our changes
+				listItems.set(position, listItem);
+
 			}
 				// Yay, we're done building all that stuff, let's return a nice fat happy RowView
-				return rowView;
+				return convertView;
 		}
 
 		/** getViewFromKid(int, View, ViewGroup, List<Kid>)
@@ -249,43 +222,37 @@ public class EditConfigActivity extends ListActivity {
 		 * 
 		 * Seems like serious overkill for what I'm doing, but okay.
 		 */
-		private View getViewFromKid(int position, View convertView, ViewGroup parent, final List<ConfigListItem> listItems) {
-
-			// The RowView we're going to return, once we're done filling it out.
-			//View rowView = new View(parent.getContext());
+		private View getViewFromKid(int position, View convertView, ViewGroup parent) {
 			
 			// Find the kid in the list via position
-			//ConfigListItem listItem = listItems.get(position);
 			ConfigListItem listItem;
+			listItem = listItems.get(position);
 			
 
-			if(convertView == null){
-				// Create a LayoutInflater, use it to make a View from the layout XML for the kid list item
-				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.list_item_edit_kids, parent, false);
+			// Create a LayoutInflater, use it to inflate a View from the layout resource we stored earlier in listItem.layout
+			// See getConfigList() about that
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(listItem.layout, parent, false);
 
-				// Make a new place to store our list item goodies
-				listItem = listItems.get(position);
-				
-				// Use the IDs of the Views within the layout to get handles on them so we can manipulate them
-				listItem.tvTitle = (TextView) convertView.findViewById(R.id.kid_name);
-				listItem.tvDescription = (TextView) convertView.findViewById(R.id.kid_minutes);
-				listItem.ivDeleteIcon = (ImageView) convertView.findViewById(R.id.kid_delete);
-				listItem.ivEditIcon = (ImageView) convertView.findViewById(R.id.kid_edit);
-				convertView.setTag(listItem);
-			} else {
-				// The goodies were already stored before, so let's use them.
-				listItem = (ConfigListItem) convertView.getTag();
-			}
-			// Log it
-			Log.d("KidsListArrayAdapter()","getViewFromKid() position:" + position + " id:" + listItem.kid.id + " name:" + listItem.kid.name);
+			// Use the IDs of the Views within the layout to get handles on them so we can manipulate them
+			listItem.tvTitle = (TextView) convertView.findViewById(R.id.kid_name);
+			listItem.tvDescription = (TextView) convertView.findViewById(R.id.kid_minutes);
+			listItem.ivDeleteIcon = (ImageView) convertView.findViewById(R.id.kid_delete);
+			listItem.ivEditIcon = (ImageView) convertView.findViewById(R.id.kid_edit);
+			convertView.setTag(listItem);
+
+			// Mark list item as "rendered", Store our changes
+			listItem.rendered = true;
+			listItems.set(position, listItem);
+
+			Log.d("KidsListArrayAdapter()","getViewFromKid() (added to cache) position:" + position + " id: " + listItem.kid_id + " name: " + listItem.sTitle);
 
 
 			// ***** Set up all of the various Views in each row of the list *****
 			// Set the TextView textView_name to the Kid's name,
 			// Set a tag so we can differentiate this TextView when someone clicks it
 			// and set up the onClick event handler so we can do stuff when the name is clicked.
-			listItem.tvTitle.setText(listItem.kid.name);
+			listItem.tvTitle.setText(listItem.sTitle);
 			listItem.tvTitle.setTag(listItem);
 			listItem.tvTitle.setOnClickListener(new View.OnClickListener() {
 
@@ -298,7 +265,7 @@ public class EditConfigActivity extends ListActivity {
 			});
 
 			// Do the same setup for textView_minutes
-			listItem.tvDescription.setText(String.valueOf(listItem.kid.timeout) + " minutes");
+			listItem.tvDescription.setText(listItem.sDescription);
 			listItem.tvDescription.setTag(listItem);
 			listItem.tvDescription.setOnClickListener(new View.OnClickListener() {
 
@@ -311,7 +278,7 @@ public class EditConfigActivity extends ListActivity {
 			});
 			
 			// And for imageView_edit
-			listItem.ivEditIcon.setImageResource(R.drawable.edit_icon);
+			listItem.ivEditIcon.setImageResource(listItem.iIcon1);
 			listItem.ivEditIcon.setTag(listItem);
 			listItem.ivEditIcon.setOnClickListener(new View.OnClickListener() {
 
@@ -324,24 +291,22 @@ public class EditConfigActivity extends ListActivity {
 					int listItemNumber = listItems.indexOf(tag);
 
 					// Find the Kid ID
-					int kidIDNumber = tag.kid.id;
+					int kidIDNumber = tag.kid_id;
 					
 					// debug log
-					Log.d("KidsListArrayAdapter()","delete.onClick() position:" + listItemNumber + " id:" + kidIDNumber);
+					Log.d("KidsListArrayAdapter()","edit.onClick() position:" + listItemNumber + " id:" + kidIDNumber);
 
 					// TODO Do some junk here to allow the user to edit settings...
 
 					// Tell everyone that the data changed, so they will refresh/redraw as needed.
 					notifyDataSetChanged();
-
 				}
 			});
 			
 			// And also for imageView_delete
-			listItem.ivDeleteIcon.setImageResource(R.drawable.delete_icon);
+			listItem.ivDeleteIcon.setImageResource(listItem.iIcon2);
 			listItem.ivDeleteIcon.setTag(listItem);
 			listItem.ivDeleteIcon.setOnClickListener(new View.OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					
@@ -351,7 +316,7 @@ public class EditConfigActivity extends ListActivity {
 					int listItemNumber = listItems.indexOf(tag);
 
 					// Use the item number to find the Kid ID
-					int kidIDNumber = tag.kid.id;
+					int kidIDNumber = tag.kid_id;
 					
 					
 					// debug log
@@ -363,7 +328,7 @@ public class EditConfigActivity extends ListActivity {
 					// Delete the kid from the config
 					Config.delKid(kidIDNumber);
 					Config.save();
-					configList.remove(listItemNumber);
+					listItems.remove(tag);
 
 					// Tell everyone that the data changed, so they will refresh/redraw as needed.
 					notifyDataSetChanged();
