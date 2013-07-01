@@ -27,7 +27,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int buttonBarStyle=0x7f010000;
     }
     public static final class color {
+        public static final int background=0x7f040001;
         public static final int black_overlay=0x7f040000;
+        public static final int descriptions=0x7f040004;
+        public static final int text_shadows=0x7f040005;
+        public static final int titles=0x7f040003;
+        public static final int widget_background=0x7f040002;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -41,17 +46,20 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     }
     public static final class drawable {
         public static final int delete_icon=0x7f020000;
-        public static final int edit_icon=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
+        public static final int dot_background=0x7f020001;
+        public static final int edit_icon=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
-        public static final int kid_delete=0x7f090006;
-        public static final int kid_edit=0x7f090005;
-        public static final int kid_minutes=0x7f090004;
-        public static final int kid_name=0x7f090003;
-        public static final int layoutMainActivity=0x7f090000;
-        public static final int tbTimeRemaining=0x7f090002;
-        public static final int textView_kids_name=0x7f090001;
+        public static final int imageView_background=0x7f090000;
+        public static final int imageView_bgoverlay=0x7f090001;
+        public static final int kid_delete=0x7f090008;
+        public static final int kid_edit=0x7f090007;
+        public static final int kid_minutes=0x7f090006;
+        public static final int kid_name=0x7f090005;
+        public static final int layoutMainActivity=0x7f090002;
+        public static final int tbTimeRemaining=0x7f090004;
+        public static final int textView_kids_name=0x7f090003;
     }
     public static final class layout {
         public static final int activity_edit_kids=0x7f030000;

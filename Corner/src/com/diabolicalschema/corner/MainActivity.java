@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
 		String dateFormatted = formatterTimer.format(new Date(countdownTime));
 		tbTimeRemaining.setText(dateFormatted);
 		
-    	timer = new CDownTimerWithPause(countdownTime, 1000){
+    	timer = new CDownTimerWithPause(countdownTime + 20, 100){
     		@Override
 			public void _onFinish(){
 				tbTimeRemaining.setText(R.string.timer_finished_value);

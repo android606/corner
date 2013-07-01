@@ -1,5 +1,10 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
+    <color name="background">#BBCCFF</color>
+    <color name="widget_background">#EEF0FFBB</color>
+    <color name="titles">#333300</color>
+    <color name="descriptions">#666600</color>
+    <color name="text_shadows">#CCCCAA</color>
 
 </resources>
