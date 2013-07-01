@@ -29,10 +29,28 @@ public class Config {
 	private static List<Kid> _kids = new ArrayList<Kid>();
 	private static SharedPreferences prefs;
 	private static int nextID;
+	private static int selectedKid; 
+	
+	public static int getSelectedKid() {
+		
+		// If there are no kids in the config, then anything they're asking for is wrong.  Return -1.
+		if(_kids.isEmpty()){ return -1; }
+		
+		// If they try to getSelectedKid, and it's not set, or it's set to something dumb, 
+		// just return the ID of the first kid in the config
+		if(selectedKid < 0 || Config.getKid(selectedKid) == null){
+			return _kids.get(0).id;
+		}
+		return selectedKid;
+	}
+	public static void setSelectedKid(int selectedKid) {
+		Config.selectedKid = selectedKid;
+	}
+
+	/** The ID of the last kid the user "selected" */
+	
 	static {
-		//TODO:
-		//load up and enumerate config options from whatever persistent storage
-		//addTestData();
+
 
 	}
 	// Create a variable to hold a reference to our one and only Config object
@@ -52,7 +70,7 @@ public class Config {
 	{
 		if (_theInstance == null)
 		{
-			throw new RuntimeException("Something unpleasant happened trying to get the Config() singleton instance.");
+			throw new RuntimeException("Something unpleasant happened trying to get the Config() instance.");
 		} else {
 			return _theInstance;
 		}
@@ -95,6 +113,7 @@ public class Config {
 		SharedPreferences.Editor spedit = prefs.edit();
 		spedit.clear();
 		spedit.putInt("nextID", nextID);
+		spedit.putInt("selectedKid", selectedKid);
 		spedit.commit();
 
 		// Save all of the kids in the config
@@ -143,6 +162,9 @@ public class Config {
 		// Load general settings
 		// nextID is the ID we're going to assign next time we create a Kid
 		nextID = prefs.getInt("nextID", 0);
+		
+		// selectedKid is the id of the kid that the user last selected.  We'll use this at startup to initialize the settings.
+		selectedKid = prefs.getInt("selectedKid", -1);
 		
 		// load all the kids from the config
 		loadKids();
@@ -245,6 +267,7 @@ public class Config {
 	 * getKid(int)
 	 * 
 	 * Give it the int ID of a Kid, it returns the Kid.
+	 * return null if the kid doesn't exist
 	 * 
 	 * @param id
 	 * @return Kid

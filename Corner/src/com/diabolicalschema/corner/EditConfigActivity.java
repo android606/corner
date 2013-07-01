@@ -258,9 +258,15 @@ public class EditConfigActivity extends ListActivity {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Something when the kid's name is clicked
-					Log.d("KidsListArrayAdapter()","name.onClick():" + ((ConfigListItem)v.getTag()).kid.name);
-
+					// When the kid's name is clicked
+					Log.d("KidsListArrayAdapter()","name.onClick():" + ((ConfigListItem)v.getTag()).sTitle + "(" + ((ConfigListItem)v.getTag()).kid_id + ")");
+					
+					// Change the currently "selected" kid to this kid
+					Config.setSelectedKid(((ConfigListItem)v.getTag()).kid_id);
+					Config.save();
+					
+					// Go back to the previous Activity
+					finish();
 				}
 			});
 
@@ -271,9 +277,14 @@ public class EditConfigActivity extends ListActivity {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Something when the kid's minutes is clicked
-					Log.d("KidsListArrayAdapter()","minutes.onClick():" + ((ConfigListItem)v.getTag()).kid.name);
-
+					// When the kid's minutes is clicked
+					Log.d("KidsListArrayAdapter()","minutes.onClick():" + ((ConfigListItem)v.getTag()).sTitle);
+					
+					// Change the currently "selected" kid to this kid
+					Config.setSelectedKid(((ConfigListItem)v.getTag()).kid_id);
+					
+					// Go back to the previous Activity
+					//NavUtils.navigateUpFromSameTask(getParent());
 				}
 			});
 			
