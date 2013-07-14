@@ -15,5 +15,9 @@
     <string name="title_activity_edit_kids">EditKidsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="new_kid">New Kid</string>
+    <string name="timeout_in_minutes">Timeout in Minutes</string>
+    <string name="name">Name</string>
+    <string name="title_activity_edit_kid_dialog">EditKidDialogActivity</string>
 
 </resources>

@@ -70,7 +70,7 @@ public class Config {
 	{
 		if (_theInstance == null)
 		{
-			throw new RuntimeException("Something unpleasant happened trying to get the Config() instance.");
+			throw new RuntimeException("Something unpleasant happened trying to get the Config().");
 		} else {
 			return _theInstance;
 		}
@@ -78,7 +78,6 @@ public class Config {
 
 	// Removes all kids from the config (mainly for debugging)
 	public static void clearAllKids(){
-		Log.d("Config()", "Cleared all kids from config");
 		_kids.clear();
 		
 	}
@@ -86,7 +85,7 @@ public class Config {
 	//
 	// printKidsToLog()
 	// prints out a list of the kids in the current config to the log
-	private static void printKidsToLog(){
+	public static void printKidsToLog(){
         // Print current list of kids to the log
         Log.i(CLASS_NAME, "Kids in the config:");
         for(Kid kid: _kids){
@@ -104,7 +103,6 @@ public class Config {
 	/// save()
 	/// Saves kids and settings to persistent storage
 	public static void save(){
-	    Log.d(CLASS_NAME, "save()");
 		// Then, save all of the general config options
 		// Get the handle on our SharedPreferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -126,7 +124,6 @@ public class Config {
 	/// saveKids()
 	/// saves the kids to persistent storage
 	private static void saveKids(){
-	    Log.d(CLASS_NAME, "saveKids()");
 		String settingKey;
 		
 		// Get the handle on our SharedPreferences
@@ -155,7 +152,6 @@ public class Config {
 	/// load ()
 	/// Loads kids and settings from persistent storage
 	public static void load(){
-	    Log.i(CLASS_NAME, "load()");
 		// Get the handle on our SharedPreferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
@@ -178,7 +174,6 @@ public class Config {
 	/// store and retrieve them from storage.  They're stored by
 	/// offset in the SharedPreferences, and that's how they're reconstructed.
 	private static void loadKids(){
-	    Log.i(CLASS_NAME, "loadKids()");
 		String pattern = ".{8}\\((\\d+)\\)(.*)";
 		Pattern p = Pattern.compile(pattern);
 		Kid tempKid;
@@ -193,7 +188,6 @@ public class Config {
 		Map<String, ?> prefsMap = prefs.getAll();
 		
 		for(String key : prefsMap.keySet()){
-			Log.d("key: ",key);
 			if (key == null || key.length() == 0) {
 				break;
 			}
@@ -204,7 +198,6 @@ public class Config {
 					
 					// Extract the Offset from the match
 					tempOffset = Integer.parseInt(m.group(1));
-					Log.d("KID OFFSET",String.valueOf(tempOffset));
 
 					// If this ID is beyond the end of the list, extend the list
 					while(tempOffset >= _kids.size()){
@@ -216,7 +209,7 @@ public class Config {
 					
 					// If we fail to get a kid, something's very wrong.  Just give up and try the next key.
 					if (tempKid == null){
-						Log.d("Config()","loadKids(): Couldnt get a kid from the collection, config is corrupted");
+						Log.e("Config()","loadKids(): Couldnt get a kid from the collection, config is corrupted");
 						break;
 					}
 					

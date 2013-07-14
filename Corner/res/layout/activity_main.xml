@@ -11,14 +11,16 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="centerCrop"
-        android:src="@color/background" />
+        android:src="@color/background"
+        android:contentDescription="Background Graphic" />
     
     <ImageView
         android:id="@+id/imageView_bgoverlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:src="@drawable/dot_background" />
+        android:src="@drawable/dot_background"
+        android:contentDescription="Background Overlay Graphic" />
 
     <LinearLayout
         android:id="@+id/layoutMainActivity"

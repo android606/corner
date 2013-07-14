@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.content.Context;
+import android.content.Intent;
 
 /** EditConfigActivity
  * 
@@ -30,6 +31,9 @@ import android.content.Context;
  */
 public class EditConfigActivity extends ListActivity {
 
+	private ConfigListArrayAdapter kidsListAdapter;
+	private boolean existingKidJustEdited = false;
+	
 	/*
 	 * ACTIVITY EVENT HANDLERS
 	 */
@@ -45,9 +49,22 @@ public class EditConfigActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_kids);
 
+		Log.d("EditConfigActivity", "onCreate()");
+
 		// Instantiate kidsListAdapter and bind it to this ListActivity so it can provide populated ListRows when the
 		// Activity asks for them.
-		ConfigListArrayAdapter kidsListAdapter = new ConfigListArrayAdapter(this, getConfigList());
+//		kidsListAdapter = new ConfigListArrayAdapter(this, getConfigList());
+//		this.setListAdapter(kidsListAdapter);
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		
+		Log.d("EditConfigActivity", "onResume()");
+		
+		// Redo our ListAdapter, since changes may have been made while we were paused.
+		kidsListAdapter = new ConfigListArrayAdapter(this, getConfigList());
 		this.setListAdapter(kidsListAdapter);
 
 	}
@@ -59,8 +76,7 @@ public class EditConfigActivity extends ListActivity {
 	@Override 
 	public void onListItemClick(ListView l, View v, int position, long id){
 		// Do stuff when an item is clicked
-		Log.d(this.getClass().getName(),"Clicked");
-
+		// or, don't.
 	}
 
 	/** onCreateOptionsMenu()
@@ -96,6 +112,7 @@ public class EditConfigActivity extends ListActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 
 	/** ConfigListItem
 	 * Represents the data needed to draw a single list item
@@ -123,10 +140,11 @@ public class EditConfigActivity extends ListActivity {
 	 */
 	public List<ConfigListItem> getConfigList() {
 		List<ConfigListItem> listItems = new ArrayList<ConfigListItem>();
+		ConfigListItem tempItem;
 
-		// Add all of the kids to the list
+		// Add all of the kids to the list		
 		for(Kid x: Config.listKids()){
-			ConfigListItem tempItem = new ConfigListItem();
+			tempItem = new ConfigListItem();
 			tempItem.kid = x;
 			tempItem.kid_id = x.id;
 			tempItem.sTitle = x.name;
@@ -136,14 +154,14 @@ public class EditConfigActivity extends ListActivity {
 			tempItem.layout = R.layout.list_item_edit_kids;
 			listItems.add(tempItem);
 		}
-		
 		// The "Add Kid" button
-		ConfigListItem tempItem = new ConfigListItem();
+		tempItem = new ConfigListItem();
 		tempItem.layout = R.layout.list_item_add_kid;
 		tempItem.isKid = false;
 		listItems.add(tempItem);
 		
-		return listItems;		
+		
+		return listItems;
 	}
 	
 
@@ -161,7 +179,6 @@ public class EditConfigActivity extends ListActivity {
 
 		public ConfigListArrayAdapter(Context context, List<ConfigListItem> configList) {
 			super(context, R.layout.list_item_edit_kids, configList);
-			Log.d("ConfigListArrayAdapter()", "");
 			this.context = context;
 			this.listItems = configList;	
 		}
@@ -183,16 +200,12 @@ public class EditConfigActivity extends ListActivity {
 
 			// Draw Kid list items
 			if(listItems.get(position).isKid){
-//				Log.d("ConfigListArrayAdapter()","getView() position:" + position + " is a kid config list item." );
-
 				// This is a kid, so we need to ask getViewFromKid to make a ListItem for us.
 				convertView = getViewFromKid(position, convertView, parent);
 			}
 			// Draw static list items
 			else 
 			{
-				Log.d("ConfigListArrayAdapter()","getView() position:" + position + " is a regular config list item." );
-				
 				ConfigListItem listItem = listItems.get(position);
 
 				// Create a LayoutInflater, use it to inflate a View from the layout resource we stored earlier in listItem.layout
@@ -201,11 +214,38 @@ public class EditConfigActivity extends ListActivity {
 				convertView = inflater.inflate(listItem.layout, parent, false);
 				
 				// Use the IDs of the Views within the layout to get handles on them so we can manipulate them
-//				listItem.tvTitle = (TextView) convertView.findViewById(R.id.kid_name);
-//				listItem.tvDescription = (TextView) convertView.findViewById(R.id.kid_minutes);
-//				listItem.ivDeleteIcon = (ImageView) convertView.findViewById(R.id.kid_delete);
-//				listItem.ivEditIcon = (ImageView) convertView.findViewById(R.id.kid_edit);
+				listItem.tvTitle = (TextView) convertView.findViewById(R.id.add_kid_title);
+				listItem.tvDescription = (TextView) convertView.findViewById(R.id.add_kid_description);
+
+				// Add a tag so we can recognize this later when someone clicks it
 				convertView.setTag(listItem);
+				
+				// Set the onClick event handlers
+				listItem.tvTitle.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// When "add kid" is clicked
+						Log.d("ConfigListArrayAdapter()","add_kid_title.onClick():");
+				
+						// Start the "edit kid dialog" activity (which presents a dialog to change settings for a single Kid)
+						Intent intent = new Intent(ContextProvider.getContext(), EditKidDialogActivity.class);
+						startActivity(intent);
+						
+					}
+				});
+				listItem.tvDescription.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// When the description under "add kid" is clicked
+						
+						// Start the "edit kid dialog" activity (which presents a dialog to change settings for a single Kid)
+						Intent intent = new Intent(ContextProvider.getContext(), EditKidDialogActivity.class);
+						startActivity(intent);
+						
+					}
+				});
 				
 				// Store our changes
 				listItems.set(position, listItem);
@@ -241,12 +281,9 @@ public class EditConfigActivity extends ListActivity {
 			listItem.ivEditIcon = (ImageView) convertView.findViewById(R.id.kid_edit);
 			convertView.setTag(listItem);
 
-			// Mark list item as "rendered", Store our changes
+			// Mark list item as "rendered", cache the rendered version
 			listItem.rendered = true;
 			listItems.set(position, listItem);
-
-			Log.d("KidsListArrayAdapter()","getViewFromKid() (added to cache) position:" + position + " id: " + listItem.kid_id + " name: " + listItem.sTitle);
-
 
 			// ***** Set up all of the various Views in each row of the list *****
 			// Set the TextView textView_name to the Kid's name,
@@ -259,8 +296,6 @@ public class EditConfigActivity extends ListActivity {
 				@Override
 				public void onClick(View v) {
 					// When the kid's name is clicked
-					Log.d("KidsListArrayAdapter()","name.onClick():" + ((ConfigListItem)v.getTag()).sTitle + "(" + ((ConfigListItem)v.getTag()).kid_id + ")");
-					
 					// Change the currently "selected" kid to this kid
 					Config.setSelectedKid(((ConfigListItem)v.getTag()).kid_id);
 					Config.save();
@@ -278,13 +313,11 @@ public class EditConfigActivity extends ListActivity {
 				@Override
 				public void onClick(View v) {
 					// When the kid's minutes is clicked
-					Log.d("KidsListArrayAdapter()","minutes.onClick():" + ((ConfigListItem)v.getTag()).sTitle);
-					
 					// Change the currently "selected" kid to this kid
 					Config.setSelectedKid(((ConfigListItem)v.getTag()).kid_id);
 					
 					// Go back to the previous Activity
-					//NavUtils.navigateUpFromSameTask(getParent());
+					finish();
 				}
 			});
 			
@@ -295,19 +328,17 @@ public class EditConfigActivity extends ListActivity {
 
 				@Override
 				public void onClick(View v) {
-					
+					// When the "edit" button is clicked next to a kid
+					// Get the tag attached to the ListItem
 					ConfigListItem tag = ((ConfigListItem)v.getTag());
 					
-					// Get the item number in the list
+					// Find out which item in the list they clicked
 					int listItemNumber = listItems.indexOf(tag);
 
 					// Find the Kid ID
 					int kidIDNumber = tag.kid_id;
-					
-					// debug log
-					Log.d("KidsListArrayAdapter()","edit.onClick() position:" + listItemNumber + " id:" + kidIDNumber);
 
-					// TODO Do some junk here to allow the user to edit settings...
+					// TODO Do some junk here to show a dialog to allow the user to edit kid-specific settings...
 
 					// Tell everyone that the data changed, so they will refresh/redraw as needed.
 					notifyDataSetChanged();
@@ -320,19 +351,16 @@ public class EditConfigActivity extends ListActivity {
 			listItem.ivDeleteIcon.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
+					// If the user clicks the "Delete" button next to a kid
+					// Get the tag attached to the ListItem
 					ConfigListItem tag = ((ConfigListItem)v.getTag());
 					
-					// Get the item number in the list
+					// Find out which item in the list they clicked
 					int listItemNumber = listItems.indexOf(tag);
 
 					// Use the item number to find the Kid ID
 					int kidIDNumber = tag.kid_id;
 					
-					
-					// debug log
-					Log.d("KidsListArrayAdapter()","delete.onClick() position:" + listItemNumber + " id:" + kidIDNumber);
-
 					// The user clicked the "Delete" icon, so let's delete the kid.
 					// The penalty for accidentally deleting is really not very high,
 					// so I'm not going to bother confirming the deletion.
@@ -343,7 +371,6 @@ public class EditConfigActivity extends ListActivity {
 
 					// Tell everyone that the data changed, so they will refresh/redraw as needed.
 					notifyDataSetChanged();
-
 				}
 			});
 
