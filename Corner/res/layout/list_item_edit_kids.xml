@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/edit_icon" />
 
     <ImageView
         android:id="@+id/kid_delete"
@@ -41,6 +41,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:clickable="true"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/delete_icon" />
 
 </LinearLayout>
