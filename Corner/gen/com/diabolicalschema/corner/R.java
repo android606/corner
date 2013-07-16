@@ -51,21 +51,22 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a000e;
-        public static final int add_kid_description=0x7f0a0009;
-        public static final int add_kid_title=0x7f0a0008;
+        public static final int action_settings=0x7f0a000f;
+        public static final int add_kid_description=0x7f0a000a;
+        public static final int add_kid_title=0x7f0a0009;
         public static final int edit_kid_layout=0x7f0a0000;
-        public static final int edit_kid_name=0x7f0a0001;
-        public static final int edit_kid_timeout=0x7f0a0002;
-        public static final int imageView_background=0x7f0a0003;
-        public static final int imageView_bgoverlay=0x7f0a0004;
-        public static final int kid_delete=0x7f0a000d;
-        public static final int kid_edit=0x7f0a000c;
-        public static final int kid_minutes=0x7f0a000b;
-        public static final int kid_name=0x7f0a000a;
-        public static final int layoutMainActivity=0x7f0a0005;
-        public static final int tbTimeRemaining=0x7f0a0007;
-        public static final int textView_kids_name=0x7f0a0006;
+        public static final int edit_kid_name=0x7f0a0002;
+        public static final int edit_kid_timeout=0x7f0a0003;
+        public static final int edit_kid_title=0x7f0a0001;
+        public static final int imageView_background=0x7f0a0004;
+        public static final int imageView_bgoverlay=0x7f0a0005;
+        public static final int kid_delete=0x7f0a000e;
+        public static final int kid_edit=0x7f0a000d;
+        public static final int kid_minutes=0x7f0a000c;
+        public static final int kid_name=0x7f0a000b;
+        public static final int layoutMainActivity=0x7f0a0006;
+        public static final int tbTimeRemaining=0x7f0a0008;
+        public static final int textView_kids_name=0x7f0a0007;
     }
     public static final class layout {
         public static final int activity_edit_kid_dialog=0x7f030000;

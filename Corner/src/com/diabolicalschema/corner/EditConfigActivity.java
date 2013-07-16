@@ -338,8 +338,11 @@ public class EditConfigActivity extends ListActivity {
 					// Find the Kid ID
 					int kidIDNumber = tag.kid_id;
 
-					// TODO Do some junk here to show a dialog to allow the user to edit kid-specific settings...
-
+					// Start the "edit kid dialog" activity (which presents a dialog to change settings for a single Kid)
+					Intent intent = new Intent(ContextProvider.getContext(), EditKidDialogActivity.class);
+					intent.putExtra("ID_OF_KID_TO_EDIT", kidIDNumber);
+					startActivity(intent);
+					
 					// Tell everyone that the data changed, so they will refresh/redraw as needed.
 					notifyDataSetChanged();
 				}
