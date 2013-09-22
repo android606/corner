@@ -32,8 +32,6 @@ import android.content.Intent;
 public class EditConfigActivity extends ListActivity {
 
 	private ConfigListArrayAdapter kidsListAdapter;
-	private boolean existingKidJustEdited = false;
-	
 	/*
 	 * ACTIVITY EVENT HANDLERS
 	 */
@@ -332,9 +330,6 @@ public class EditConfigActivity extends ListActivity {
 					// Get the tag attached to the ListItem
 					ConfigListItem tag = ((ConfigListItem)v.getTag());
 					
-					// Find out which item in the list they clicked
-					int listItemNumber = listItems.indexOf(tag);
-
 					// Find the Kid ID
 					int kidIDNumber = tag.kid_id;
 
@@ -357,9 +352,6 @@ public class EditConfigActivity extends ListActivity {
 					// If the user clicks the "Delete" button next to a kid
 					// Get the tag attached to the ListItem
 					ConfigListItem tag = ((ConfigListItem)v.getTag());
-					
-					// Find out which item in the list they clicked
-					int listItemNumber = listItems.indexOf(tag);
 
 					// Use the item number to find the Kid ID
 					int kidIDNumber = tag.kid_id;

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Corner</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="button_start_stop">Start/Stop</string>
-    <string name="timer_start_value">00:00</string>
-    <string name="timer_finished_value">done!</string>
-    <string name="select_kid_prompt">Which kid is in trouble?</string>
-    <string name="which_kid">Which kid is in trouble?</string>
-    <string name="add_edit_children">Add/Edit Children...</string>
-    <string name="prefs_new_child_name">Child\'s Name</string>
-    <string name="exit_settings_button">OK, Cool.</string>
-    <string name="title_activity_edit_kids">EditKidsActivity</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="new_kid">New Kid</string>
-    <string name="timeout_in_minutes">Timeout in Minutes</string>
-    <string name="name">Name</string>
-    <string name="title_activity_edit_kid_dialog">EditKidDialogActivity</string>
+	<string name="app_name">Corner</string>
+	<!--  Activity Titles -->
+	<string name="title_activity_main">MainActivity</string>
+	<string name="title_activity_edit_kids">Add/Edit Kids</string>
+	<string name="title_activity_edit_kid_dialog">Kid Settings</string>
+	
+	<!--  Control Labels  -->
+	<string name="button_start_stop">Start/Stop</string>
+	<string name="timer_start_value">00:00</string>
+	<string name="timer_finished_value">done!</string>
+	<string name="which_kid_needs_a_break">Which kid needs a break?</string>
+	<string name="action_settings">Settings</string>
+	<string name="add_a_new_kid">Add a kid to the list</string>
+	<string name="new_kid">New Kid</string>
+	
+	<!--  Help Text  -->
+	<string name="timeout_in_minutes">Timeout in Minutes</string>
+	<string name="name">Name</string>
+
 
 </resources>

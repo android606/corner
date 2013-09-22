@@ -12,7 +12,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center_horizontal"
-            android:text="Add"
+            android:text="@string/new_kid"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center_horizontal"
-            android:text="Add a child to the list"
+            android:text="@string/add_a_new_kid"
             android:textStyle="italic" />
 
 </LinearLayout>

@@ -3,13 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="right"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        tools:ignore="InefficientWeight" >
 
         <TextView
             android:id="@+id/kid_name"
@@ -30,6 +31,7 @@
 
     <ImageView
         android:id="@+id/kid_edit"
+        android:contentDescription="@string/access_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:clickable="true"
@@ -37,6 +39,7 @@
 
     <ImageView
         android:id="@+id/kid_delete"
+        android:contentDescription="@string/access_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="right"

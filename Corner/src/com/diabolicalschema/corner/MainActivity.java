@@ -2,7 +2,6 @@ package com.diabolicalschema.corner;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -13,16 +12,11 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.TableLayout.LayoutParams;
 import android.widget.TextView;
-import com.diabolicalschema.corner.Config;
+import android.widget.Toast;
 
 /** class MainActivity
  * Okay, I know, that class name sucks.
@@ -101,6 +95,7 @@ public class MainActivity extends Activity {
     	Log.d(ACTIVITY_NAME, "onResume()");
     	super.onResume();
 		Config.load();
+    	
     	ShowMainView();
 
 	}
@@ -128,24 +123,24 @@ public class MainActivity extends Activity {
 	 */
 	public void ShowMainView(){
 		this.setContentView(R.layout.activity_main);
+        
 		// Add any buttons and crap I might have for debugging
         addDebugWidgets();
-		
-		// TODO: DEBUG
-        // If there are no kids, add one.
-        // Later, we will change this so that if there are no kids
-        // Take the user to the "add kids" dialog
-        if(Config.listKids().isEmpty()){
-        	Kid tempkid = new Kid();
-        	tempkid.name = "Susie Test";
-        	tempkid.timeout = 1;
-        	Config.addKid(tempkid);
-        }
         
         // Set up the Selected Kid name TextView
         tvSelectedKid = (TextView) findViewById(R.id.textView_kids_name);
         int selectedKidId = Config.getSelectedKid();
-        tvSelectedKid.setText(Config.getKid(selectedKidId).name);
+        if(selectedKidId == -1)
+        {
+            countdownTime = 0;
+            tvSelectedKid.setText("IH");
+        }
+        else
+        {
+            countdownTime = Config.getKid(selectedKidId).timeout * 1000 * 60;
+            tvSelectedKid.setText(Config.getKid(selectedKidId).name);
+        }
+        
         tvSelectedKid.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -157,7 +152,6 @@ public class MainActivity extends Activity {
         
 		
         // Set up the time remaining display TextView 
-        countdownTime = Config.getKid(selectedKidId).timeout * 1000 * 60;
 		tbTimeRemaining = (TextView) findViewById(R.id.tbTimeRemaining);
 		String dateFormatted = formatterTimer.format(new Date(countdownTime));
 		tbTimeRemaining.setText(dateFormatted);
@@ -182,6 +176,20 @@ public class MainActivity extends Activity {
 		
 		// Initialize the timer object
 		setUpTimer(countdownTime);
+		
+		// TODO: DEBUG
+        // If there are no kids, add one.
+        // Later, we will change this so that if there are no kids
+        // Take the user to the "add kids" dialog
+        if(Config.listKids().isEmpty()){
+        	//Config.addKid("Methuselah", 12);
+        	
+        	CharSequence text = "You must add a kid to continue.";
+        	Toast toast = Toast.makeText(this, text, Toast.LENGTH_LONG);
+        	toast.show();
+        	
+        	showConfigActivity();
+        }
 		
 	}
 
@@ -231,6 +239,7 @@ public class MainActivity extends Activity {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.layoutMainActivity);
 		
 		// Set up container for debug controls
+		@SuppressWarnings("deprecation") //Make eclipse shut up about FILL_PARENT being deprecated
 		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 		layoutParams.weight = 1.0f;
 		layoutParams.gravity = (Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
